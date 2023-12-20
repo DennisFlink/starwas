@@ -1,0 +1,14 @@
+.nav img {
+  position: relative;
+  width: 100%;
+  object-fit: contain;
+  z-index: -100;
+}
+.nav h1 {
+  position: absolute;
+  font-weight: 400;
+  font-size: 6.4rem;
+  top: 5rem;
+  left: 5%;
+  color: #ffd600;
+}
