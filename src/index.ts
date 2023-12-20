@@ -36,7 +36,6 @@ async function fetchInfo() {
         if (response.status === 200) {
             const data: CharachterInfo[] = await response.json()
             fetchedPersons = data
-            
         }
         else {
             throw Error(String(response.status))

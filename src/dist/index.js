@@ -10,16 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const url = 'https://swapi.dev/api/';
 const peopleUrl = 'people/';
-let fetchedPerson = [];
+const planetUrl = 'planets/';
+let fetchedPersons = [];
+let fetchedPlanets = [];
 let homeWorldUrl = '';
-function fetchPeople() {
+function fetchInfo() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const response = yield fetch(`${url}${peopleUrl}`);
             if (response.status === 200) {
                 const data = yield response.json();
-                fetchedPerson = data;
-                console.log(data);
+                fetchedPersons = data;
             }
             else {
                 throw Error(String(response.status));
@@ -28,6 +29,19 @@ function fetchPeople() {
         catch (error) {
             console.log(error);
         }
+        try {
+            const response = yield fetch(`${url}${planetUrl}`);
+            if (response.status === 200) {
+                const data = yield response.json();
+                fetchedPlanets = data;
+            }
+            else {
+                throw Error(String(response.status));
+            }
+        }
+        catch (error) {
+            console.log();
+        }
     });
 }
-fetchPeople();
+fetchInfo();
