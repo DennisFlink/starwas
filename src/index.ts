@@ -5,18 +5,7 @@ let fetchedPersons: CharacterInfo[] | null = []
 let fetchedPlanets: PlanetInfo[] = []
 let homeWorldUrl: string = ''
 
-interface CharacterInfo{
-   
-        name:string,
-        height:string,
-        mass:string,
-        hair_color:string,
-        skin_color:string,
-        eye_color:string,
-        birth_year:string,
-        gender:string,
-        homeworld:string,
-   
+
 
 interface CharacterInfo {
     name: string;
@@ -71,24 +60,18 @@ const planetTerrain:HTMLElement | null = document.getElementById("planetTerrain"
 window.addEventListener('load', function() {
     fetchAllPepole()
     fetchAllPlanets()
+    
 })
 
 async function fetchPeople(pageNumber: number): Promise<CharacterInfo[]> {
 
-async function fetchInfo(): Promise<CharacterInfo[]> {
     try {
-        const response = await fetch(`${url}${peopleUrl}`);
+        
         const response = await fetch(`${url}${peopleUrl}?1=&page=${pageNumber}`)
 
         if (response.status === 200) {
             const data  = await response.json()
-           console.log(data.results);
-           /* fetchedPersons?.push(data.results); */
-           fetchedPersons = data.results;
-           console.log(fetchedPersons);
-            return fetchedPersons!;
-            
-            const data = await response.json()
+            console.log("hej");
             return data.results
         }
         else {
@@ -122,23 +105,22 @@ async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
     }  
         return[]
     }
-}
 
-fetchInfo();
-displayPersonInfo();
-displayPlanetInfo();
 
-async function displayPersonInfo(){
 
-   let person = await fetchInfo()
-   if(person && person.length > 0)  {
-    personName!.innerHTML = person![curentPerson].name;
-    personHeight!.innerHTML = person![curentPerson].height;
-    personMass!.innerHTML = person![curentPerson].mass;
-    personHairColor!.innerHTML = person![curentPerson].hair_color;
-    personEyeColor!.innerHTML = person![curentPerson].eye_color;
-    personBirthYear!.innerHTML = person![curentPerson].birth_year;
-    personGender!.innerHTML = person![curentPerson].gender;
+
+
+function displayPersonInfo(){
+
+    
+   if(fetchedPersons && fetchedPersons.length > 0)  {
+    personName!.innerHTML = fetchedPersons![curentPerson].name;
+    personHeight!.innerHTML = fetchedPersons![curentPerson].height;
+    personMass!.innerHTML = fetchedPersons![curentPerson].mass;
+    personHairColor!.innerHTML = fetchedPersons![curentPerson].hair_color;
+    personEyeColor!.innerHTML = fetchedPersons![curentPerson].eye_color;
+    personBirthYear!.innerHTML = fetchedPersons![curentPerson].birth_year;
+    personGender!.innerHTML = fetchedPersons![curentPerson].gender;
    }
       
     else{
@@ -147,22 +129,22 @@ async function displayPersonInfo(){
 
 } 
 
-async function displayPlanetInfo(){
+function displayPlanetInfo(){
 
-let planet = await fetchInfo()
+    if(fetchPlanets && fetchPlanets.length > 0){
+        planetName!.innerHTML = fetchedPlanets[1].name;
+        planetRotation!.innerHTML = fetchedPlanets[1].rotation_speed;
+        planetDiameter!.innerHTML = fetchedPlanets[1].diameter;
+        planetClimate!.innerHTML = fetchedPlanets[1].climate;
+        planetGravity!.innerHTML = fetchedPlanets[1].gravity;
+        planetTerrain!.innerHTML = fetchedPlanets[1].terrain;
+    }
+    
+    else{
+        console.error("fel att lägga till planeter");
+    }
 
-if(planet && planet.length > 0){
-    planetName!.innerHTML = fetchedPlanets[1].name;
-    planetRotation!.innerHTML = fetchedPlanets[1].rotation_speed;
-    planetDiameter!.innerHTML = fetchedPlanets[1].diameter;
-    planetClimate!.innerHTML = fetchedPlanets[1].climate;
-    planetGravity!.innerHTML = fetchedPlanets[1].gravity;
-    planetTerrain!.innerHTML = fetchedPlanets[1].terrain;
-}
 
-else{
-    console.error("fel att lägga till planeter");
-}
 
 
 }
@@ -170,13 +152,14 @@ else{
 async function fetchAllPepole(): Promise<void> {
     let pageNumber = 1;
     let currentPagePersons: CharacterInfo[] = []
-    
+    console.log("fetch pepole");
     do {
         currentPagePersons = await fetchPeople(pageNumber)
-        fetchedPersons = fetchedPersons.concat(currentPagePersons)
+        fetchedPersons = fetchedPersons!.concat(currentPagePersons)
         pageNumber++
     }
     while (pageNumber < 10)
+    displayPersonInfo();
 }
 
 async function fetchAllPlanets(): Promise<void> {
@@ -189,6 +172,7 @@ async function fetchAllPlanets(): Promise<void> {
         pageNumber++
     }
     while (pageNumber < 7)
+    
 }
 
 

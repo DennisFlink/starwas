@@ -37,97 +37,80 @@ window.addEventListener('load', function () {
 });
 function fetchPeople(pageNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        function fetchInfo() {
-            return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    const response = yield fetch(`${url}${peopleUrl}`);
-                    const response = yield fetch(`${url}${peopleUrl}?1=&page=${pageNumber}`);
-                    if (response.status === 200) {
-                        const data = yield response.json();
-                        console.log(data.results);
-                        /* fetchedPersons?.push(data.results); */
-                        fetchedPersons = data.results;
-                        console.log(fetchedPersons);
-                        return fetchedPersons;
-                        const data = yield response.json();
-                        return data.results;
-                    }
-                    else {
-                        throw Error(String(response.status));
-                    }
-                }
-                catch (error) {
-                    console.log(error);
-                    return Promise.reject(error);
-                    return [];
-                }
-            });
+        try {
+            const response = yield fetch(`${url}${peopleUrl}?1=&page=${pageNumber}`);
+            if (response.status === 200) {
+                const data = yield response.json();
+                console.log("hej");
+                return data.results;
+            }
+            else {
+                throw Error(String(response.status));
+            }
         }
-        function fetchPlanets(pageNumber) {
-            return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    const response = yield fetch(`${url}${planetUrl}?1=&page=${pageNumber}`);
-                    if (response.status === 200) {
-                        const data = yield response.json();
-                        return data.results;
-                    }
-                    else {
-                        throw Error(String(response.status));
-                    }
-                }
-                catch (error) {
-                    console.log();
-                }
-                return [];
-            });
+        catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+            return [];
         }
     });
 }
-fetchInfo();
-displayPersonInfo();
-displayPlanetInfo();
-function displayPersonInfo() {
+function fetchPlanets(pageNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        let person = yield fetchInfo();
-        if (person && person.length > 0) {
-            personName.innerHTML = person[curentPerson].name;
-            personHeight.innerHTML = person[curentPerson].height;
-            personMass.innerHTML = person[curentPerson].mass;
-            personHairColor.innerHTML = person[curentPerson].hair_color;
-            personEyeColor.innerHTML = person[curentPerson].eye_color;
-            personBirthYear.innerHTML = person[curentPerson].birth_year;
-            personGender.innerHTML = person[curentPerson].gender;
+        try {
+            const response = yield fetch(`${url}${planetUrl}?1=&page=${pageNumber}`);
+            if (response.status === 200) {
+                const data = yield response.json();
+                return data.results;
+            }
+            else {
+                throw Error(String(response.status));
+            }
         }
-        else {
-            console.error("fel att lägga till personer");
+        catch (error) {
+            console.log();
         }
+        return [];
     });
+}
+function displayPersonInfo() {
+    if (fetchedPersons && fetchedPersons.length > 0) {
+        personName.innerHTML = fetchedPersons[curentPerson].name;
+        personHeight.innerHTML = fetchedPersons[curentPerson].height;
+        personMass.innerHTML = fetchedPersons[curentPerson].mass;
+        personHairColor.innerHTML = fetchedPersons[curentPerson].hair_color;
+        personEyeColor.innerHTML = fetchedPersons[curentPerson].eye_color;
+        personBirthYear.innerHTML = fetchedPersons[curentPerson].birth_year;
+        personGender.innerHTML = fetchedPersons[curentPerson].gender;
+    }
+    else {
+        console.error("fel att lägga till personer");
+    }
 }
 function displayPlanetInfo() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let planet = yield fetchInfo();
-        if (planet && planet.length > 0) {
-            planetName.innerHTML = fetchedPlanets[1].name;
-            planetRotation.innerHTML = fetchedPlanets[1].rotation_speed;
-            planetDiameter.innerHTML = fetchedPlanets[1].diameter;
-            planetClimate.innerHTML = fetchedPlanets[1].climate;
-            planetGravity.innerHTML = fetchedPlanets[1].gravity;
-            planetTerrain.innerHTML = fetchedPlanets[1].terrain;
-        }
-        else {
-            console.error("fel att lägga till planeter");
-        }
-    });
+    if (fetchPlanets && fetchPlanets.length > 0) {
+        planetName.innerHTML = fetchedPlanets[1].name;
+        planetRotation.innerHTML = fetchedPlanets[1].rotation_speed;
+        planetDiameter.innerHTML = fetchedPlanets[1].diameter;
+        planetClimate.innerHTML = fetchedPlanets[1].climate;
+        planetGravity.innerHTML = fetchedPlanets[1].gravity;
+        planetTerrain.innerHTML = fetchedPlanets[1].terrain;
+    }
+    else {
+        console.error("fel att lägga till planeter");
+    }
 }
 function fetchAllPepole() {
     return __awaiter(this, void 0, void 0, function* () {
         let pageNumber = 1;
         let currentPagePersons = [];
+        console.log("fetch pepole");
         do {
             currentPagePersons = yield fetchPeople(pageNumber);
             fetchedPersons = fetchedPersons.concat(currentPagePersons);
             pageNumber++;
         } while (pageNumber < 10);
+        displayPersonInfo();
     });
 }
 function fetchAllPlanets() {
