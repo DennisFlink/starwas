@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const url = 'http https://swapi.dev/api/';
+const url = 'https://swapi.dev/api/';
 const peopleUrl = 'people/';
 let fetchedPerson = [];
 let homeWorldUrl = '';
@@ -22,7 +22,7 @@ function fetchPeople() {
                 console.log(data);
             }
             else {
-                throw Error('Something went wrong try again soon');
+                throw Error(String(response.status));
             }
         }
         catch (error) {
