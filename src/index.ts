@@ -1,0 +1,1 @@
+const url: string = 'http https://swapi.dev/api/'
