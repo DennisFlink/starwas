@@ -32,17 +32,16 @@ interface CharachterInfo{
     eye_color:string,
     birth_year:string,
     gender:string,
-    homeworld:{
+    homeworld:string,
+
+}
+
+interface PlanetInfo{
         name:string,
         rotation_speed:string,
         orbital_speed:string,
         climate:string;
         gravity:string,
-        terrain:string
-    },
-    films:string[],
-    species:string[],
-    vehicles:string[],
-    starships:string[],
-
+        terrain:string,
 }
+
