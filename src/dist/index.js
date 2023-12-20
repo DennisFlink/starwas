@@ -31,38 +31,55 @@ const planetDiameter = document.getElementById("planetDiameter");
 const planetClimate = document.getElementById("planetCLimate");
 const planetGravity = document.getElementById("planetGravity");
 const planetTerrain = document.getElementById("planetTerrain");
-function fetchInfo() {
+window.addEventListener('load', function () {
+    fetchAllPepole();
+    fetchAllPlanets();
+});
+function fetchPeople(pageNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield fetch(`${url}${peopleUrl}`);
-            if (response.status === 200) {
-                const data = yield response.json();
-                console.log(data.results);
-                /* fetchedPersons?.push(data.results); */
-                fetchedPersons = data.results;
-                console.log(fetchedPersons);
-                return fetchedPersons;
-            }
-            else {
-                throw Error(String(response.status));
-            }
+        function fetchInfo() {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const response = yield fetch(`${url}${peopleUrl}`);
+                    const response = yield fetch(`${url}${peopleUrl}?1=&page=${pageNumber}`);
+                    if (response.status === 200) {
+                        const data = yield response.json();
+                        console.log(data.results);
+                        /* fetchedPersons?.push(data.results); */
+                        fetchedPersons = data.results;
+                        console.log(fetchedPersons);
+                        return fetchedPersons;
+                        const data = yield response.json();
+                        return data.results;
+                    }
+                    else {
+                        throw Error(String(response.status));
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                    return Promise.reject(error);
+                    return [];
+                }
+            });
         }
-        catch (error) {
-            console.log(error);
-            return Promise.reject(error);
-        }
-        try {
-            const response = yield fetch(`${url}${planetUrl}`);
-            if (response.status === 200) {
-                const data = yield response.json();
-                fetchedPlanets = data;
-            }
-            else {
-                throw Error(String(response.status));
-            }
-        }
-        catch (error) {
-            console.log();
+        function fetchPlanets(pageNumber) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const response = yield fetch(`${url}${planetUrl}?1=&page=${pageNumber}`);
+                    if (response.status === 200) {
+                        const data = yield response.json();
+                        return data.results;
+                    }
+                    else {
+                        throw Error(String(response.status));
+                    }
+                }
+                catch (error) {
+                    console.log();
+                }
+                return [];
+            });
         }
     });
 }
@@ -100,5 +117,27 @@ function displayPlanetInfo() {
         else {
             console.error("fel att lägga till planeter");
         }
+    });
+}
+function fetchAllPepole() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let pageNumber = 1;
+        let currentPagePersons = [];
+        do {
+            currentPagePersons = yield fetchPeople(pageNumber);
+            fetchedPersons = fetchedPersons.concat(currentPagePersons);
+            pageNumber++;
+        } while (pageNumber < 10);
+    });
+}
+function fetchAllPlanets() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let pageNumber = 1;
+        let currentPagePlanets = [];
+        do {
+            currentPagePlanets = yield fetchPlanets(pageNumber);
+            fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
+            pageNumber++;
+        } while (pageNumber < 7);
     });
 }

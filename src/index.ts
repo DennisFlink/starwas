@@ -17,6 +17,24 @@ interface CharacterInfo{
         gender:string,
         homeworld:string,
    
+
+interface CharacterInfo {
+    name: string;
+    height: string;
+    mass: string;
+    hair_color: string;
+    skin_color: string;
+    eye_color: string;
+    birth_year: string;
+    gender: string;
+    homeworld: string;
+    films: string[];
+    species: string[];
+    vehicles: string[];
+    starships: string[];
+    created: string;
+    edited: string;
+    url: string;
 }
 
 interface PlanetInfo{
@@ -49,9 +67,19 @@ const planetClimate:HTMLElement | null = document.getElementById("planetCLimate"
 const planetGravity:HTMLElement | null = document.getElementById("planetGravity");
 const planetTerrain:HTMLElement | null = document.getElementById("planetTerrain");
 
+
+window.addEventListener('load', function() {
+    fetchAllPepole()
+    fetchAllPlanets()
+})
+
+async function fetchPeople(pageNumber: number): Promise<CharacterInfo[]> {
+
 async function fetchInfo(): Promise<CharacterInfo[]> {
     try {
         const response = await fetch(`${url}${peopleUrl}`);
+        const response = await fetch(`${url}${peopleUrl}?1=&page=${pageNumber}`)
+
         if (response.status === 200) {
             const data  = await response.json()
            console.log(data.results);
@@ -60,6 +88,8 @@ async function fetchInfo(): Promise<CharacterInfo[]> {
            console.log(fetchedPersons);
             return fetchedPersons!;
             
+            const data = await response.json()
+            return data.results
         }
         else {
             throw Error(String(response.status))
@@ -70,13 +100,18 @@ async function fetchInfo(): Promise<CharacterInfo[]> {
         console.log(error)
         return Promise.reject(error);
         
+        return[]
     }
 
+}
+
+async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
+    
     try {
-        const response = await fetch(`${url}${planetUrl}`)
+        const response = await fetch(`${url}${planetUrl}?1=&page=${pageNumber}`)
         if (response.status === 200) {
-            const data: PlanetInfo[] = await response.json()
-            fetchedPlanets = data
+            const data = await response.json()
+            return data.results
         }
         else {
             throw Error(String(response.status))
@@ -85,6 +120,8 @@ async function fetchInfo(): Promise<CharacterInfo[]> {
     catch(error) {
         console.log()
     }  
+        return[]
+    }
 }
 
 fetchInfo();
@@ -127,6 +164,31 @@ else{
     console.error("fel att lägga till planeter");
 }
 
-    
 
 }
+
+async function fetchAllPepole(): Promise<void> {
+    let pageNumber = 1;
+    let currentPagePersons: CharacterInfo[] = []
+    
+    do {
+        currentPagePersons = await fetchPeople(pageNumber)
+        fetchedPersons = fetchedPersons.concat(currentPagePersons)
+        pageNumber++
+    }
+    while (pageNumber < 10)
+}
+
+async function fetchAllPlanets(): Promise<void> {
+    let pageNumber = 1;
+    let currentPagePlanets: PlanetInfo[] = []
+
+    do {
+        currentPagePlanets = await fetchPlanets(pageNumber)
+        fetchedPlanets = fetchedPlanets.concat(currentPagePlanets)
+        pageNumber++
+    }
+    while (pageNumber < 7)
+}
+
+
