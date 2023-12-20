@@ -1,24 +1,63 @@
-const url: string = 'http https://swapi.dev/api/'
+const url: string = 'https://swapi.dev/api/'
 const peopleUrl: string = 'people/'
-let fetchedPerson: object = []
+const planetUrl: string = 'planets/'
+let fetchedPersons: CharachterInfo[] = []
+let fetchedPlanets: PlanetInfo[] = []
 let homeWorldUrl: string = ''
 
+interface CharachterInfo{
+    name:string,
+    height:string,
+    mass:string,
+    hair_color:string,
+    skin_color:string,
+    eye_color:string,
+    birth_year:string,
+    gender:string,
+    homeworld:string,
 
-async function fetchPeople() {
+}
+
+interface PlanetInfo{
+        name:string,
+        rotation_speed:string,
+        orbital_speed:string,
+        climate:string;
+        gravity:string,
+        terrain:string,
+}
+
+
+
+
+async function fetchInfo() {
     try {
         const response = await fetch(`${url}${peopleUrl}`)
         if (response.status === 200) {
-            const data: object = await response.json
-            fetchedPerson = data
-            console.log(data)
+            const data: CharachterInfo[] = await response.json()
+            fetchedPersons = data
         }
         else {
-            throw Error('Something went wrong try again soon')
+            throw Error(String(response.status))
         }
     }
     catch(error) {
         console.log(error)
     }
+
+    try {
+        const response = await fetch(`${url}${planetUrl}`)
+        if (response.status === 200) {
+            const data: PlanetInfo[] = await response.json()
+            fetchedPlanets = data
+        }
+        else {
+            throw Error(String(response.status))
+        }
+    }
+    catch(error) {
+        console.log()
+    }
 }
 
-fetchPeople()
+fetchInfo()
