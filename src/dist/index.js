@@ -17,7 +17,7 @@ function fetchPeople() {
         try {
             const response = yield fetch(`${url}${peopleUrl}`);
             if (response.status === 200) {
-                const data = yield response.json;
+                const data = yield response.json();
                 fetchedPerson = data;
                 console.log(data);
             }

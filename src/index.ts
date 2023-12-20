@@ -1,27 +1,9 @@
 const url: string = 'https://swapi.dev/api/'
 const peopleUrl: string = 'people/'
-let fetchedPerson: object = []
+const planetUrl: string = 'planets/'
+let fetchedPersons: CharachterInfo[] = []
+let fetchedPlanets: PlanetInfo[] = []
 let homeWorldUrl: string = ''
-
-
-async function fetchPeople() {
-    try {
-        const response: Response = await fetch(`${url}${peopleUrl}`)
-        if (response.status === 200) {
-            const data = await response.json
-            fetchedPerson = data
-            console.log(data)
-        }
-        else {
-            throw Error(String(response.status))
-        }
-    }
-    catch(error) {
-        console.log(error)
-    }
-}
-
-fetchPeople()
 
 interface CharachterInfo{
     name:string,
@@ -46,3 +28,37 @@ interface CharachterInfo{
     starships:string[],
 
 }
+
+
+async function fetchInfo() {
+    try {
+        const response = await fetch(`${url}${peopleUrl}`)
+        if (response.status === 200) {
+            const data: CharachterInfo[] = await response.json()
+            fetchedPersons = data
+            
+        }
+        else {
+            throw Error(String(response.status))
+        }
+    }
+    catch(error) {
+        console.log(error)
+    }
+
+    try {
+        const response = await fetch(`${url}${planetUrl}`)
+        if (response.status === 200) {
+            const data: PlanetInfo[] = await response.json()
+            fetchedPlanets = data
+        }
+        else {
+            throw Error(String(response.status))
+        }
+    }
+    catch(error) {
+        console.log()
+    }
+}
+
+fetchInfo()
