@@ -103,7 +103,6 @@ async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
 }
 
 function displayPersonInfo(personID: number) {
-  if (fetchedPersons && fetchedPersons.length > 0) {
     personName!.innerHTML = fetchedPersons![personID].name;
     personHeight!.innerHTML = fetchedPersons![personID].height;
     personMass!.innerHTML = fetchedPersons![personID].mass;
@@ -111,22 +110,15 @@ function displayPersonInfo(personID: number) {
     personEyeColor!.innerHTML = fetchedPersons![personID].eye_color;
     personBirthYear!.innerHTML = fetchedPersons![personID].birth_year;
     personGender!.innerHTML = fetchedPersons![personID].gender;
-  } else {
-    console.error("fel att lägga till personer");
-  }
 }
 
 function displayPlanetInfo(homeworldID: number) {
-  if (fetchedPlanets && fetchedPlanets.length > 0) {
     planetName!.innerHTML = fetchedPlanets[homeworldID].name;
     planetRotation!.innerHTML = fetchedPlanets[homeworldID].rotation_speed;
     planetDiameter!.innerHTML = fetchedPlanets[homeworldID].diameter;
     planetClimate!.innerHTML = fetchedPlanets[homeworldID].climate;
     planetGravity!.innerHTML = fetchedPlanets[homeworldID].gravity;
     planetTerrain!.innerHTML = fetchedPlanets[homeworldID].terrain;
-  } else {
-    console.error("fel att lägga till planeter");
-  }
 }
 
 async function fetchAllPepole(): Promise<void> {
@@ -143,9 +135,7 @@ async function fetchAllPepole(): Promise<void> {
 
 function populateInfo(clickedPerson: string): void {
   let person: CharacterInfo[] | undefined;
-  person = fetchedPersons?.filter((person) =>
-    person.name.toLowerCase().includes(clickedPerson)
-  );
+  person = fetchedPersons?.filter((person) => person.name === clickedPerson);
 
   if (person && person.length > 0) {
     const personUrl: string = person[0].url;
@@ -156,7 +146,7 @@ function populateInfo(clickedPerson: string): void {
     if (match) {
       const personIDstring = match[1];
       const personID = parseInt(personIDstring);
-      displayPersonInfo(personID);
+      displayPersonInfo(personID-1);
     } else {
       console.log("No match");
     }
@@ -166,7 +156,7 @@ function populateInfo(clickedPerson: string): void {
     if (match2) {
       const homeWorldString = match2[1];
       const homeworldID = parseInt(homeWorldString);
-      displayPersonInfo(homeworldID);
+      displayPlanetInfo(homeworldID-1);
     } else {
       console.log("No match");
     }
@@ -299,7 +289,6 @@ function createListOfCharachter() {
   fetchedPersons!.forEach((person) => {
     let liEl: HTMLElement = document.createElement("li");
     liEl.innerHTML = person.name;
-    console.log(liEl);
     
     liEl.addEventListener("click", function() {
         populateInfo(person.name)
