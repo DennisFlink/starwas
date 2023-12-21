@@ -3,7 +3,6 @@ const peopleUrl: string = "people/";
 const planetUrl: string = "planets/";
 let fetchedPersons: CharacterInfo[] | null = [];
 let fetchedPlanets: PlanetInfo[] = [];
-let homeWorldUrl: string = "";
 
 interface CharacterInfo {
   name: string;
@@ -49,7 +48,6 @@ const personBirthYear: HTMLElement | null =
   document.getElementById("personBirthYear");
 const personGender: HTMLElement | null =
   document.getElementById("personGender");
-let curentPerson = 0;
 
 // Planet element
 const planetName: HTMLElement | null = document.getElementById("planetName");
@@ -64,8 +62,13 @@ const planetGravity: HTMLElement | null =
 const planetTerrain: HTMLElement | null =
   document.getElementById("planetTerrain");
 
+<<<<<<< HEAD
 /* const charachterList: HTMLElement | null = document.getElementById("characters-list"); */
 const paginatedList = document.getElementById("characters-list") as HTMLElement;
+=======
+const charachterList: HTMLElement | null =
+  document.getElementById("characters-list");
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
 
 window.addEventListener("load", function () {
   fetchAllPepole();
@@ -85,8 +88,6 @@ async function fetchPeople(pageNumber: number): Promise<CharacterInfo[]> {
     }
   } catch (error) {
     console.log(error);
-    return Promise.reject(error);
-
     return [];
   }
 }
@@ -102,35 +103,27 @@ async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
     }
   } catch (error) {
     console.log();
-  }
-  return [];
-}
-
-function displayPersonInfo() {
-  if (fetchedPersons && fetchedPersons.length > 0) {
-    personName!.innerHTML = fetchedPersons![curentPerson].name;
-    personHeight!.innerHTML = fetchedPersons![curentPerson].height;
-    personMass!.innerHTML = fetchedPersons![curentPerson].mass;
-    personHairColor!.innerHTML = fetchedPersons![curentPerson].hair_color;
-    personEyeColor!.innerHTML = fetchedPersons![curentPerson].eye_color;
-    personBirthYear!.innerHTML = fetchedPersons![curentPerson].birth_year;
-    personGender!.innerHTML = fetchedPersons![curentPerson].gender;
-  } else {
-    console.error("fel att lägga till personer");
+    return [];
   }
 }
 
-function displayPlanetInfo() {
-  if (fetchPlanets && fetchPlanets.length > 0) {
-    planetName!.innerHTML = fetchedPlanets[1].name;
-    planetRotation!.innerHTML = fetchedPlanets[1].rotation_speed;
-    planetDiameter!.innerHTML = fetchedPlanets[1].diameter;
-    planetClimate!.innerHTML = fetchedPlanets[1].climate;
-    planetGravity!.innerHTML = fetchedPlanets[1].gravity;
-    planetTerrain!.innerHTML = fetchedPlanets[1].terrain;
-  } else {
-    console.error("fel att lägga till planeter");
-  }
+function displayPersonInfo(personID: number) {
+    personName!.innerHTML = fetchedPersons![personID].name;
+    personHeight!.innerHTML = fetchedPersons![personID].height;
+    personMass!.innerHTML = fetchedPersons![personID].mass;
+    personHairColor!.innerHTML = fetchedPersons![personID].hair_color;
+    personEyeColor!.innerHTML = fetchedPersons![personID].eye_color;
+    personBirthYear!.innerHTML = fetchedPersons![personID].birth_year;
+    personGender!.innerHTML = fetchedPersons![personID].gender;
+}
+
+function displayPlanetInfo(homeworldID: number) {
+    planetName!.innerHTML = fetchedPlanets[homeworldID].name;
+    planetRotation!.innerHTML = fetchedPlanets[homeworldID].rotation_speed;
+    planetDiameter!.innerHTML = fetchedPlanets[homeworldID].diameter;
+    planetClimate!.innerHTML = fetchedPlanets[homeworldID].climate;
+    planetGravity!.innerHTML = fetchedPlanets[homeworldID].gravity;
+    planetTerrain!.innerHTML = fetchedPlanets[homeworldID].terrain;
 }
 
 async function fetchAllPepole(): Promise<void> {
@@ -148,6 +141,36 @@ async function fetchAllPepole(): Promise<void> {
   CreatePage();
 }
 
+function populateInfo(clickedPerson: string): void {
+  let person: CharacterInfo[] | undefined;
+  person = fetchedPersons?.filter((person) => person.name === clickedPerson);
+
+  if (person && person.length > 0) {
+    const personUrl: string = person[0].url;
+    const homeWorldUrl: string = person[0].homeworld;
+
+    const match = personUrl.match(/\/(\d+)\/$/);
+
+    if (match) {
+      const personIDstring = match[1];
+      const personID = parseInt(personIDstring);
+      displayPersonInfo(personID-1);
+    } else {
+      console.log("No match");
+    }
+
+    const match2 = homeWorldUrl.match(/\/(\d+)\/$/);
+
+    if (match2) {
+      const homeWorldString = match2[1];
+      const homeworldID = parseInt(homeWorldString);
+      displayPlanetInfo(homeworldID-1);
+    } else {
+      console.log("No match");
+    }
+  }
+}
+
 async function fetchAllPlanets(): Promise<void> {
   let pageNumber = 1;
   let currentPagePlanets: PlanetInfo[] = [];
@@ -157,14 +180,19 @@ async function fetchAllPlanets(): Promise<void> {
     fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
     pageNumber++;
   } while (pageNumber < 7);
+<<<<<<< HEAD
 }
 
 function CreatePage() {
   console.log("creating pages");
+=======
+
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
   /* PAGE FUNCTION */
   const paginationNumbers = document.getElementById(
     "pagination-numbers"
   ) as HTMLElement;
+<<<<<<< HEAD
 
   const listItems = paginatedList.querySelectorAll(
     "li"
@@ -172,6 +200,20 @@ function CreatePage() {
   console.log(listItems);
   const nextButton = document.getElementById("next-button") as HTMLButtonElement;
   const prevButton = document.getElementById("prev-button") as HTMLButtonElement;
+=======
+  const paginatedList = document.getElementById(
+    "characters-list"
+  ) as HTMLElement;
+  const listItems = paginatedList.querySelectorAll(
+    "li"
+  ) as NodeListOf<HTMLLIElement>;
+  const nextButton = document.getElementById(
+    "next-button"
+  ) as HTMLButtonElement;
+  const prevButton = document.getElementById(
+    "prev-button"
+  ) as HTMLButtonElement;
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
 
   const paginationLimit = 10;
   const pageCount = Math.ceil(listItems.length / paginationLimit);
@@ -210,6 +252,10 @@ function CreatePage() {
       }
     });
   };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
   const appendPageNumber = (index: any) => {
     const pageNumber = document.createElement("button");
     pageNumber.className = "pagination-number";
@@ -236,7 +282,10 @@ function CreatePage() {
     const currRange = pageNum * paginationLimit;
 
     listItems.forEach((item, index) => {
+<<<<<<< HEAD
       console.log("hiding elements");
+=======
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
       item.classList.add("hidden");
       if (index >= prevRange && index < currRange) {
         item.classList.remove("hidden");
@@ -244,7 +293,11 @@ function CreatePage() {
     });
   };
 
+<<<<<<< HEAD
   function RunStuff() {
+=======
+  window.addEventListener("load", () => {
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
     getPaginationNumbers();
     setCurrentPage(1);
 
@@ -265,6 +318,7 @@ function CreatePage() {
         });
       }
     });
+<<<<<<< HEAD
   }
 
   RunStuff();
@@ -284,3 +338,19 @@ function createListOfCharachter() {
 
 
 
+=======
+  });
+}
+
+function createListOfCharachter() {
+  fetchedPersons!.forEach((person) => {
+    let liEl: HTMLElement = document.createElement("li");
+    liEl.innerHTML = person.name;
+    
+    liEl.addEventListener("click", function() {
+        populateInfo(person.name)
+    });
+    charachterList?.appendChild(liEl);
+  });
+}
+>>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
