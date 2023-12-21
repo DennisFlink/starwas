@@ -62,13 +62,8 @@ const planetGravity: HTMLElement | null =
 const planetTerrain: HTMLElement | null =
   document.getElementById("planetTerrain");
 
-<<<<<<< HEAD
 /* const charachterList: HTMLElement | null = document.getElementById("characters-list"); */
 const paginatedList = document.getElementById("characters-list") as HTMLElement;
-=======
-const charachterList: HTMLElement | null =
-  document.getElementById("characters-list");
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
 
 window.addEventListener("load", function () {
   fetchAllPepole();
