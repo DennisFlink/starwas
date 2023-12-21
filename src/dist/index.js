@@ -31,7 +31,8 @@ const planetDiameter = document.getElementById("planetDiameter");
 const planetClimate = document.getElementById("planetCLimate");
 const planetGravity = document.getElementById("planetGravity");
 const planetTerrain = document.getElementById("planetTerrain");
-const charachterList = document.getElementById("characters-list");
+/* const charachterList: HTMLElement | null = document.getElementById("characters-list"); */
+const paginatedList = document.getElementById("characters-list");
 window.addEventListener("load", function () {
     fetchAllPepole();
     fetchAllPlanets();
@@ -112,6 +113,7 @@ function fetchAllPepole() {
             pageNumber++;
         } while (pageNumber < 10);
         createListOfCharachter();
+        CreatePage();
     });
 }
 function fetchAllPlanets() {
@@ -125,97 +127,101 @@ function fetchAllPlanets() {
         } while (pageNumber < 7);
     });
 }
-/* PAGE FUNCTION */
-const paginationNumbers = document.getElementById("pagination-numbers");
-const paginatedList = document.getElementById("characters-list");
-const listItems = paginatedList.querySelectorAll("li");
-const nextButton = document.getElementById("next-button");
-const prevButton = document.getElementById("prev-button");
-const paginationLimit = 10;
-const pageCount = Math.ceil(listItems.length / paginationLimit);
-let currentPage = 1;
-const disableButton = (button) => {
-    button.classList.add("disabled");
-    button.setAttribute("disabled", true);
-};
-const enableButton = (button) => {
-    button.classList.remove("disabled");
-    button.removeAttribute("disabled");
-};
-const handlePageButtonsStatus = () => {
-    if (currentPage === 1) {
-        disableButton(prevButton);
-    }
-    else {
-        enableButton(prevButton);
-    }
-    if (pageCount === currentPage) {
-        disableButton(nextButton);
-    }
-    else {
-        enableButton(nextButton);
-    }
-};
-const handleActivePageNumber = () => {
-    document.querySelectorAll(".pagination-number").forEach((button) => {
-        button.classList.remove("active");
-        const pageIndex = Number(button.getAttribute("page-index"));
-        if (pageIndex == currentPage) {
-            button.classList.add("active");
+function CreatePage() {
+    console.log("creating pages");
+    /* PAGE FUNCTION */
+    const paginationNumbers = document.getElementById("pagination-numbers");
+    const listItems = paginatedList.querySelectorAll("li");
+    console.log(listItems);
+    const nextButton = document.getElementById("next-button");
+    const prevButton = document.getElementById("prev-button");
+    const paginationLimit = 10;
+    const pageCount = Math.ceil(listItems.length / paginationLimit);
+    let currentPage = 1;
+    const disableButton = (button) => {
+        button.classList.add("disabled");
+        button.setAttribute("disabled", true);
+    };
+    const enableButton = (button) => {
+        button.classList.remove("disabled");
+        button.removeAttribute("disabled");
+    };
+    const handlePageButtonsStatus = () => {
+        if (currentPage === 1) {
+            disableButton(prevButton);
         }
-    });
-};
+        else {
+            enableButton(prevButton);
+        }
+        if (pageCount === currentPage) {
+            disableButton(nextButton);
+        }
+        else {
+            enableButton(nextButton);
+        }
+    };
+    const handleActivePageNumber = () => {
+        document.querySelectorAll(".pagination-number").forEach((button) => {
+            button.classList.remove("active");
+            const pageIndex = Number(button.getAttribute("page-index"));
+            if (pageIndex == currentPage) {
+                button.classList.add("active");
+            }
+        });
+    };
+    const appendPageNumber = (index) => {
+        const pageNumber = document.createElement("button");
+        pageNumber.className = "pagination-number";
+        pageNumber.innerHTML = index;
+        pageNumber.setAttribute("page-index", index);
+        pageNumber.setAttribute("aria-label", "Page " + index);
+        paginationNumbers.appendChild(pageNumber);
+    };
+    const getPaginationNumbers = () => {
+        for (let i = 1; i <= pageCount; i++) {
+            appendPageNumber(i);
+        }
+    };
+    const setCurrentPage = (pageNum) => {
+        currentPage = pageNum;
+        handleActivePageNumber();
+        handlePageButtonsStatus();
+        const prevRange = (pageNum - 1) * paginationLimit;
+        const currRange = pageNum * paginationLimit;
+        listItems.forEach((item, index) => {
+            console.log("hiding elements");
+            item.classList.add("hidden");
+            if (index >= prevRange && index < currRange) {
+                item.classList.remove("hidden");
+            }
+        });
+    };
+    function RunStuff() {
+        getPaginationNumbers();
+        setCurrentPage(1);
+        prevButton.addEventListener("click", () => {
+            setCurrentPage(currentPage - 1);
+        });
+        nextButton.addEventListener("click", () => {
+            setCurrentPage(currentPage + 1);
+        });
+        document.querySelectorAll(".pagination-number").forEach((button) => {
+            const pageIndex = Number(button.getAttribute("page-index"));
+            if (pageIndex) {
+                button.addEventListener("click", () => {
+                    setCurrentPage(pageIndex);
+                });
+            }
+        });
+    }
+    RunStuff();
+}
 function createListOfCharachter() {
     fetchedPersons.forEach(person => {
         let liEl = document.createElement("li");
         liEl.innerHTML = person.name;
-        console.log(liEl);
         //Gustavs functiuon i EventListner
-        /*  liEl.addEventListener("click", ); */
-        charachterList === null || charachterList === void 0 ? void 0 : charachterList.appendChild(liEl);
+        /*  liEl.addEventListener("click",  ); */
+        paginatedList === null || paginatedList === void 0 ? void 0 : paginatedList.appendChild(liEl);
     });
 }
-const appendPageNumber = (index) => {
-    const pageNumber = document.createElement("button");
-    pageNumber.className = "pagination-number";
-    pageNumber.innerHTML = index;
-    pageNumber.setAttribute("page-index", index);
-    pageNumber.setAttribute("aria-label", "Page " + index);
-    paginationNumbers.appendChild(pageNumber);
-};
-const getPaginationNumbers = () => {
-    for (let i = 1; i <= pageCount; i++) {
-        appendPageNumber(i);
-    }
-};
-const setCurrentPage = (pageNum) => {
-    currentPage = pageNum;
-    handleActivePageNumber();
-    handlePageButtonsStatus();
-    const prevRange = (pageNum - 1) * paginationLimit;
-    const currRange = pageNum * paginationLimit;
-    listItems.forEach((item, index) => {
-        item.classList.add("hidden");
-        if (index >= prevRange && index < currRange) {
-            item.classList.remove("hidden");
-        }
-    });
-};
-window.addEventListener("load", () => {
-    getPaginationNumbers();
-    setCurrentPage(1);
-    prevButton.addEventListener("click", () => {
-        setCurrentPage(currentPage - 1);
-    });
-    nextButton.addEventListener("click", () => {
-        setCurrentPage(currentPage + 1);
-    });
-    document.querySelectorAll(".pagination-number").forEach((button) => {
-        const pageIndex = Number(button.getAttribute("page-index"));
-        if (pageIndex) {
-            button.addEventListener("click", () => {
-                setCurrentPage(pageIndex);
-            });
-        }
-    });
-});

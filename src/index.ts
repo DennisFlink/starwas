@@ -64,7 +64,8 @@ const planetGravity: HTMLElement | null =
 const planetTerrain: HTMLElement | null =
   document.getElementById("planetTerrain");
 
-const charachterList :HTMLElement | null = document.getElementById("characters-list");
+/* const charachterList: HTMLElement | null = document.getElementById("characters-list"); */
+const paginatedList = document.getElementById("characters-list") as HTMLElement;
 
 window.addEventListener("load", function () {
   fetchAllPepole();
@@ -141,7 +142,10 @@ async function fetchAllPepole(): Promise<void> {
     fetchedPersons = fetchedPersons!.concat(currentPagePersons);
     pageNumber++;
   } while (pageNumber < 10);
+
   createListOfCharachter();
+
+  CreatePage();
 }
 
 async function fetchAllPlanets(): Promise<void> {
@@ -155,121 +159,128 @@ async function fetchAllPlanets(): Promise<void> {
   } while (pageNumber < 7);
 }
 
-/* PAGE FUNCTION */
-const paginationNumbers = document.getElementById(
-  "pagination-numbers"
-) as HTMLElement;
-const paginatedList = document.getElementById("characters-list") as HTMLElement;
-const listItems = paginatedList.querySelectorAll(
-  "li"
-) as NodeListOf<HTMLLIElement>;
-const nextButton = document.getElementById("next-button") as HTMLButtonElement;
-const prevButton = document.getElementById("prev-button") as HTMLButtonElement;
+function CreatePage() {
+  console.log("creating pages");
+  /* PAGE FUNCTION */
+  const paginationNumbers = document.getElementById(
+    "pagination-numbers"
+  ) as HTMLElement;
 
-const paginationLimit = 10;
-const pageCount = Math.ceil(listItems.length / paginationLimit);
-let currentPage = 1;
+  const listItems = paginatedList.querySelectorAll(
+    "li"
+  ) as NodeListOf<HTMLLIElement>;
+  console.log(listItems);
+  const nextButton = document.getElementById("next-button") as HTMLButtonElement;
+  const prevButton = document.getElementById("prev-button") as HTMLButtonElement;
 
-const disableButton = (button: any) => {
-  button.classList.add("disabled");
-  button.setAttribute("disabled", true);
-};
+  const paginationLimit = 10;
+  const pageCount = Math.ceil(listItems.length / paginationLimit);
+  let currentPage = 1;
 
-const enableButton = (button: any) => {
-  button.classList.remove("disabled");
-  button.removeAttribute("disabled");
-};
+  const disableButton = (button: any) => {
+    button.classList.add("disabled");
+    button.setAttribute("disabled", true);
+  };
 
-const handlePageButtonsStatus = () => {
-  if (currentPage === 1) {
-    disableButton(prevButton);
-  } else {
-    enableButton(prevButton);
-  }
+  const enableButton = (button: any) => {
+    button.classList.remove("disabled");
+    button.removeAttribute("disabled");
+  };
 
-  if (pageCount === currentPage) {
-    disableButton(nextButton);
-  } else {
-    enableButton(nextButton);
-  }
-};
-
-const handleActivePageNumber = () => {
-  document.querySelectorAll(".pagination-number").forEach((button) => {
-    button.classList.remove("active");
-    const pageIndex = Number(button.getAttribute("page-index"));
-    if (pageIndex == currentPage) {
-      button.classList.add("active");
+  const handlePageButtonsStatus = () => {
+    if (currentPage === 1) {
+      disableButton(prevButton);
+    } else {
+      enableButton(prevButton);
     }
-  });
-};
 
-function createListOfCharachter(){
+    if (pageCount === currentPage) {
+      disableButton(nextButton);
+    } else {
+      enableButton(nextButton);
+    }
+  };
+
+  const handleActivePageNumber = () => {
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+      button.classList.remove("active");
+      const pageIndex = Number(button.getAttribute("page-index"));
+      if (pageIndex == currentPage) {
+        button.classList.add("active");
+      }
+    });
+  };
+  const appendPageNumber = (index: any) => {
+    const pageNumber = document.createElement("button");
+    pageNumber.className = "pagination-number";
+    pageNumber.innerHTML = index;
+    pageNumber.setAttribute("page-index", index);
+    pageNumber.setAttribute("aria-label", "Page " + index);
+
+    paginationNumbers.appendChild(pageNumber);
+  };
+
+  const getPaginationNumbers = () => {
+    for (let i = 1; i <= pageCount; i++) {
+      appendPageNumber(i);
+    }
+  };
+
+  const setCurrentPage = (pageNum: any) => {
+    currentPage = pageNum;
+
+    handleActivePageNumber();
+    handlePageButtonsStatus();
+
+    const prevRange = (pageNum - 1) * paginationLimit;
+    const currRange = pageNum * paginationLimit;
+
+    listItems.forEach((item, index) => {
+      console.log("hiding elements");
+      item.classList.add("hidden");
+      if (index >= prevRange && index < currRange) {
+        item.classList.remove("hidden");
+      }
+    });
+  };
+
+  function RunStuff() {
+    getPaginationNumbers();
+    setCurrentPage(1);
+
+    prevButton.addEventListener("click", () => {
+      setCurrentPage(currentPage - 1);
+    });
+
+    nextButton.addEventListener("click", () => {
+      setCurrentPage(currentPage + 1);
+    });
+
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+      const pageIndex = Number(button.getAttribute("page-index"));
+
+      if (pageIndex) {
+        button.addEventListener("click", () => {
+          setCurrentPage(pageIndex);
+        });
+      }
+    });
+  }
+
+  RunStuff();
+
+}
+
+function createListOfCharachter() {
 
   fetchedPersons!.forEach(person => {
-      let liEl:HTMLElement = document.createElement("li");
-      liEl.innerHTML = person.name;
-      console.log(liEl);
-      //Gustavs functiuon i EventListner
-     /*  liEl.addEventListener("click", ); */
-     charachterList?.appendChild(liEl);
+    let liEl: HTMLElement = document.createElement("li");
+    liEl.innerHTML = person.name;
+    //Gustavs functiuon i EventListner
+    /*  liEl.addEventListener("click",  ); */
+    paginatedList?.appendChild(liEl);
   });
 }
 
 
 
-const appendPageNumber = (index: any) => {
-  const pageNumber = document.createElement("button");
-  pageNumber.className = "pagination-number";
-  pageNumber.innerHTML = index;
-  pageNumber.setAttribute("page-index", index);
-  pageNumber.setAttribute("aria-label", "Page " + index);
-
-  paginationNumbers.appendChild(pageNumber);
-};
-
-const getPaginationNumbers = () => {
-  for (let i = 1; i <= pageCount; i++) {
-    appendPageNumber(i);
-  }
-};
-
-const setCurrentPage = (pageNum: any) => {
-  currentPage = pageNum;
-
-  handleActivePageNumber();
-  handlePageButtonsStatus();
-
-  const prevRange = (pageNum - 1) * paginationLimit;
-  const currRange = pageNum * paginationLimit;
-
-  listItems.forEach((item, index) => {
-    item.classList.add("hidden");
-    if (index >= prevRange && index < currRange) {
-      item.classList.remove("hidden");
-    }
-  });
-};
-
-window.addEventListener("load", () => {
-  getPaginationNumbers();
-  setCurrentPage(1);
-
-  prevButton.addEventListener("click", () => {
-    setCurrentPage(currentPage - 1);
-  });
-
-  nextButton.addEventListener("click", () => {
-    setCurrentPage(currentPage + 1);
-  });
-
-  document.querySelectorAll(".pagination-number").forEach((button) => {
-    const pageIndex = Number(button.getAttribute("page-index"));
-
-    if (pageIndex) {
-      button.addEventListener("click", () => {
-        setCurrentPage(pageIndex);
-      });
-    }
-  });
-});
