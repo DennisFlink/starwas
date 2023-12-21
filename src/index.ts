@@ -6,7 +6,6 @@ let fetchedPlanets: PlanetInfo[] = []
 let homeWorldUrl: string = ''
 
 
-
 interface CharacterInfo {
     name: string;
     height: string;
@@ -56,6 +55,8 @@ const planetClimate:HTMLElement | null = document.getElementById("planetCLimate"
 const planetGravity:HTMLElement | null = document.getElementById("planetGravity");
 const planetTerrain:HTMLElement | null = document.getElementById("planetTerrain");
 
+
+const charachterList:HTMLElement | null = document.getElementById("characters-list");
 
 window.addEventListener('load', function() {
     fetchAllPepole()
@@ -107,9 +108,6 @@ async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
     }
 
 
-
-
-
 function displayPersonInfo(){
 
     
@@ -159,7 +157,7 @@ async function fetchAllPepole(): Promise<void> {
         pageNumber++
     }
     while (pageNumber < 10)
-    displayPersonInfo();
+    createListOfCharachter();
 }
 
 async function fetchAllPlanets(): Promise<void> {
@@ -175,4 +173,14 @@ async function fetchAllPlanets(): Promise<void> {
     
 }
 
+function createListOfCharachter(){
 
+    fetchedPersons!.forEach(person => {
+        let liEl:HTMLElement = document.createElement("li");
+        liEl.innerHTML = person.name;
+        console.log(liEl);
+        //Gustavs functiuon i EventListner
+       /*  liEl.addEventListener("click", ); */
+       charachterList?.appendChild(liEl);
+    });
+}

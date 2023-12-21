@@ -31,6 +31,7 @@ const planetDiameter = document.getElementById("planetDiameter");
 const planetClimate = document.getElementById("planetCLimate");
 const planetGravity = document.getElementById("planetGravity");
 const planetTerrain = document.getElementById("planetTerrain");
+const charachterList = document.getElementById("characters-list");
 window.addEventListener('load', function () {
     fetchAllPepole();
     fetchAllPlanets();
@@ -110,7 +111,7 @@ function fetchAllPepole() {
             fetchedPersons = fetchedPersons.concat(currentPagePersons);
             pageNumber++;
         } while (pageNumber < 10);
-        displayPersonInfo();
+        createListOfCharachter();
     });
 }
 function fetchAllPlanets() {
@@ -122,5 +123,15 @@ function fetchAllPlanets() {
             fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
             pageNumber++;
         } while (pageNumber < 7);
+    });
+}
+function createListOfCharachter() {
+    fetchedPersons.forEach(person => {
+        let liEl = document.createElement("li");
+        liEl.innerHTML = person.name;
+        console.log(liEl);
+        //Gustavs functiuon i EventListner
+        /*  liEl.addEventListener("click", ); */
+        charachterList === null || charachterList === void 0 ? void 0 : charachterList.appendChild(liEl);
     });
 }
