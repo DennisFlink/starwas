@@ -3,7 +3,7 @@ const peopleUrl: string = 'people/'
 const planetUrl: string = 'planets/'
 let fetchedPersons: CharacterInfo[] | null = []
 let fetchedPlanets: PlanetInfo[] = []
-let homeWorldUrl: string = ''
+
 
 
 
@@ -45,7 +45,7 @@ const personSkinColor:HTMLElement | null = document.getElementById("personSkinCo
 const personEyeColor:HTMLElement | null = document.getElementById("personEyeColor");
 const personBirthYear:HTMLElement | null = document.getElementById("personBirthYear");
 const personGender:HTMLElement | null = document.getElementById("personGender");
-let curentPerson = 0;
+
 
 
 // Planet element
@@ -81,8 +81,6 @@ async function fetchPeople(pageNumber: number): Promise<CharacterInfo[]> {
     }
     catch(error) {
         console.log(error)
-        return Promise.reject(error);
-        
         return[]
     }
 
@@ -106,21 +104,17 @@ async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
         return[]
     }
 
-
-
-
-
-function displayPersonInfo(){
+function displayPersonInfo(personID: number){
 
     
    if(fetchedPersons && fetchedPersons.length > 0)  {
-    personName!.innerHTML = fetchedPersons![curentPerson].name;
-    personHeight!.innerHTML = fetchedPersons![curentPerson].height;
-    personMass!.innerHTML = fetchedPersons![curentPerson].mass;
-    personHairColor!.innerHTML = fetchedPersons![curentPerson].hair_color;
-    personEyeColor!.innerHTML = fetchedPersons![curentPerson].eye_color;
-    personBirthYear!.innerHTML = fetchedPersons![curentPerson].birth_year;
-    personGender!.innerHTML = fetchedPersons![curentPerson].gender;
+    personName!.innerHTML = fetchedPersons![personID].name;
+    personHeight!.innerHTML = fetchedPersons![personID].height;
+    personMass!.innerHTML = fetchedPersons![personID].mass;
+    personHairColor!.innerHTML = fetchedPersons![personID].hair_color;
+    personEyeColor!.innerHTML = fetchedPersons![personID].eye_color;
+    personBirthYear!.innerHTML = fetchedPersons![personID].birth_year;
+    personGender!.innerHTML = fetchedPersons![personID].gender;
    }
       
     else{
@@ -132,21 +126,17 @@ function displayPersonInfo(){
 function displayPlanetInfo(){
 
     if(fetchPlanets && fetchPlanets.length > 0){
-        planetName!.innerHTML = fetchedPlanets[1].name;
-        planetRotation!.innerHTML = fetchedPlanets[1].rotation_speed;
-        planetDiameter!.innerHTML = fetchedPlanets[1].diameter;
-        planetClimate!.innerHTML = fetchedPlanets[1].climate;
-        planetGravity!.innerHTML = fetchedPlanets[1].gravity;
-        planetTerrain!.innerHTML = fetchedPlanets[1].terrain;
+        planetName!.innerHTML = fetchedPlanets[clickedPlanet].name;
+        planetRotation!.innerHTML = fetchedPlanets[clickedPlanet].rotation_speed;
+        planetDiameter!.innerHTML = fetchedPlanets[clickedPlanet].diameter;
+        planetClimate!.innerHTML = fetchedPlanets[clickedPlanet].climate;
+        planetGravity!.innerHTML = fetchedPlanets[clickedPlanet].gravity;
+        planetTerrain!.innerHTML = fetchedPlanets[clickedPlanet].terrain;
     }
-    
-    else{
+
+    else {
         console.error("fel att lägga till planeter");
     }
-
-
-
-
 }
 
 async function fetchAllPepole(): Promise<void> {
@@ -175,4 +165,32 @@ async function fetchAllPlanets(): Promise<void> {
     
 }
 
+function populateInfo(clickedPerson: string): void {
+    let person: CharacterInfo[] | undefined;
+    person = fetchedPersons?.filter(person => person.name.toLowerCase().includes(clickedPerson))
+    
+    if (person && person.length > 0) {
+        const personUrl: string = person[0].url
+        const homeWorldUrl: string = person[0].homeworld
 
+        const match = personUrl.match(/\/(\d+)\/$/);
+
+        if (match) {
+            const personIDstring = match[1];
+            const personID = parseInt(personIDstring)
+            displayPersonInfo(personID)
+          } else {
+            console.log("No match");
+          }
+
+        const match2 = homeWorldUrl.match(/\/(\d+)\/$/);
+
+        if (match2) {
+            const homeWorldString = match2[1];
+            const homeworldID = parseInt(homeWorldString)
+            displayPersonInfo(homeworldID)
+          } else {
+            console.log("No match");
+          }
+    }
+}
