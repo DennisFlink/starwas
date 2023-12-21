@@ -180,19 +180,14 @@ async function fetchAllPlanets(): Promise<void> {
     fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
     pageNumber++;
   } while (pageNumber < 7);
-<<<<<<< HEAD
 }
 
 function CreatePage() {
   console.log("creating pages");
-=======
-
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
   /* PAGE FUNCTION */
   const paginationNumbers = document.getElementById(
     "pagination-numbers"
   ) as HTMLElement;
-<<<<<<< HEAD
 
   const listItems = paginatedList.querySelectorAll(
     "li"
@@ -200,20 +195,6 @@ function CreatePage() {
   console.log(listItems);
   const nextButton = document.getElementById("next-button") as HTMLButtonElement;
   const prevButton = document.getElementById("prev-button") as HTMLButtonElement;
-=======
-  const paginatedList = document.getElementById(
-    "characters-list"
-  ) as HTMLElement;
-  const listItems = paginatedList.querySelectorAll(
-    "li"
-  ) as NodeListOf<HTMLLIElement>;
-  const nextButton = document.getElementById(
-    "next-button"
-  ) as HTMLButtonElement;
-  const prevButton = document.getElementById(
-    "prev-button"
-  ) as HTMLButtonElement;
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
 
   const paginationLimit = 10;
   const pageCount = Math.ceil(listItems.length / paginationLimit);
@@ -252,10 +233,6 @@ function CreatePage() {
       }
     });
   };
-<<<<<<< HEAD
-=======
-
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
   const appendPageNumber = (index: any) => {
     const pageNumber = document.createElement("button");
     pageNumber.className = "pagination-number";
@@ -282,10 +259,7 @@ function CreatePage() {
     const currRange = pageNum * paginationLimit;
 
     listItems.forEach((item, index) => {
-<<<<<<< HEAD
       console.log("hiding elements");
-=======
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
       item.classList.add("hidden");
       if (index >= prevRange && index < currRange) {
         item.classList.remove("hidden");
@@ -293,11 +267,7 @@ function CreatePage() {
     });
   };
 
-<<<<<<< HEAD
   function RunStuff() {
-=======
-  window.addEventListener("load", () => {
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
     getPaginationNumbers();
     setCurrentPage(1);
 
@@ -318,7 +288,6 @@ function CreatePage() {
         });
       }
     });
-<<<<<<< HEAD
   }
 
   RunStuff();
@@ -338,19 +307,3 @@ function createListOfCharachter() {
 
 
 
-=======
-  });
-}
-
-function createListOfCharachter() {
-  fetchedPersons!.forEach((person) => {
-    let liEl: HTMLElement = document.createElement("li");
-    liEl.innerHTML = person.name;
-    
-    liEl.addEventListener("click", function() {
-        populateInfo(person.name)
-    });
-    charachterList?.appendChild(liEl);
-  });
-}
->>>>>>> 1320b08484c3bd93c880f26b66204e8121858f46
