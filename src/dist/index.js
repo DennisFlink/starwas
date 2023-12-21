@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const url = 'https://swapi.dev/api/';
-const peopleUrl = 'people/';
-const planetUrl = 'planets/';
+const url = "https://swapi.dev/api/";
+const peopleUrl = "people/";
+const planetUrl = "planets/";
 let fetchedPersons = [];
 let fetchedPlanets = [];
-let homeWorldUrl = '';
+let homeWorldUrl = "";
 //Person element
 const personName = document.getElementById("personName");
 const personHeight = document.getElementById("personHeight");
@@ -31,7 +31,8 @@ const planetDiameter = document.getElementById("planetDiameter");
 const planetClimate = document.getElementById("planetCLimate");
 const planetGravity = document.getElementById("planetGravity");
 const planetTerrain = document.getElementById("planetTerrain");
-window.addEventListener('load', function () {
+const charachterList = document.getElementById("characters-list");
+window.addEventListener("load", function () {
     fetchAllPepole();
     fetchAllPlanets();
 });
@@ -110,7 +111,7 @@ function fetchAllPepole() {
             fetchedPersons = fetchedPersons.concat(currentPagePersons);
             pageNumber++;
         } while (pageNumber < 10);
-        displayPersonInfo();
+        createListOfCharachter();
     });
 }
 function fetchAllPlanets() {
@@ -124,3 +125,97 @@ function fetchAllPlanets() {
         } while (pageNumber < 7);
     });
 }
+/* PAGE FUNCTION */
+const paginationNumbers = document.getElementById("pagination-numbers");
+const paginatedList = document.getElementById("characters-list");
+const listItems = paginatedList.querySelectorAll("li");
+const nextButton = document.getElementById("next-button");
+const prevButton = document.getElementById("prev-button");
+const paginationLimit = 10;
+const pageCount = Math.ceil(listItems.length / paginationLimit);
+let currentPage = 1;
+const disableButton = (button) => {
+    button.classList.add("disabled");
+    button.setAttribute("disabled", true);
+};
+const enableButton = (button) => {
+    button.classList.remove("disabled");
+    button.removeAttribute("disabled");
+};
+const handlePageButtonsStatus = () => {
+    if (currentPage === 1) {
+        disableButton(prevButton);
+    }
+    else {
+        enableButton(prevButton);
+    }
+    if (pageCount === currentPage) {
+        disableButton(nextButton);
+    }
+    else {
+        enableButton(nextButton);
+    }
+};
+const handleActivePageNumber = () => {
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+        button.classList.remove("active");
+        const pageIndex = Number(button.getAttribute("page-index"));
+        if (pageIndex == currentPage) {
+            button.classList.add("active");
+        }
+    });
+};
+function createListOfCharachter() {
+    fetchedPersons.forEach(person => {
+        let liEl = document.createElement("li");
+        liEl.innerHTML = person.name;
+        console.log(liEl);
+        //Gustavs functiuon i EventListner
+        /*  liEl.addEventListener("click", ); */
+        charachterList === null || charachterList === void 0 ? void 0 : charachterList.appendChild(liEl);
+    });
+}
+const appendPageNumber = (index) => {
+    const pageNumber = document.createElement("button");
+    pageNumber.className = "pagination-number";
+    pageNumber.innerHTML = index;
+    pageNumber.setAttribute("page-index", index);
+    pageNumber.setAttribute("aria-label", "Page " + index);
+    paginationNumbers.appendChild(pageNumber);
+};
+const getPaginationNumbers = () => {
+    for (let i = 1; i <= pageCount; i++) {
+        appendPageNumber(i);
+    }
+};
+const setCurrentPage = (pageNum) => {
+    currentPage = pageNum;
+    handleActivePageNumber();
+    handlePageButtonsStatus();
+    const prevRange = (pageNum - 1) * paginationLimit;
+    const currRange = pageNum * paginationLimit;
+    listItems.forEach((item, index) => {
+        item.classList.add("hidden");
+        if (index >= prevRange && index < currRange) {
+            item.classList.remove("hidden");
+        }
+    });
+};
+window.addEventListener("load", () => {
+    getPaginationNumbers();
+    setCurrentPage(1);
+    prevButton.addEventListener("click", () => {
+        setCurrentPage(currentPage - 1);
+    });
+    nextButton.addEventListener("click", () => {
+        setCurrentPage(currentPage + 1);
+    });
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+        const pageIndex = Number(button.getAttribute("page-index"));
+        if (pageIndex) {
+            button.addEventListener("click", () => {
+                setCurrentPage(pageIndex);
+            });
+        }
+    });
+});
