@@ -1,7 +1,7 @@
 .nav img {
-  position: relative;
   width: 100%;
-  object-fit: contain;
+  max-height: 25rem;
+  object-fit: cover;
   z-index: -100;
 }
 .nav h1 {
