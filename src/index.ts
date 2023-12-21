@@ -300,8 +300,10 @@ function createListOfCharachter() {
     let liEl: HTMLElement = document.createElement("li");
     liEl.innerHTML = person.name;
     console.log(liEl);
-    //Gustavs functiuon i EventListner
-    /*  liEl.addEventListener("click", ); */
+    
+    liEl.addEventListener("click", function() {
+        populateInfo(person.name)
+    });
     charachterList?.appendChild(liEl);
   });
 }
