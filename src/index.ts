@@ -1,11 +1,8 @@
-const url: string = 'https://swapi.dev/api/'
-const peopleUrl: string = 'people/'
-const planetUrl: string = 'planets/'
-let fetchedPersons: CharacterInfo[] | null = []
-let fetchedPlanets: PlanetInfo[] = []
-
-
-
+const url: string = "https://swapi.dev/api/";
+const peopleUrl: string = "people/";
+const planetUrl: string = "planets/";
+let fetchedPersons: CharacterInfo[] | null = [];
+let fetchedPlanets: PlanetInfo[] = [];
 
 interface CharacterInfo {
   name: string;
@@ -65,7 +62,8 @@ const planetGravity: HTMLElement | null =
 const planetTerrain: HTMLElement | null =
   document.getElementById("planetTerrain");
 
-const charachterList :HTMLElement | null = document.getElementById("characters-list");
+const charachterList: HTMLElement | null =
+  document.getElementById("characters-list");
 
 window.addEventListener("load", function () {
   fetchAllPepole();
@@ -83,35 +81,29 @@ async function fetchPeople(pageNumber: number): Promise<CharacterInfo[]> {
     } else {
       throw Error(String(response.status));
     }
-    catch(error) {
-        console.log(error)
-        return[]
-    }
-
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 async function fetchPlanets(pageNumber: number): Promise<PlanetInfo[]> {
-    
-    try {
-        const response = await fetch(`${url}${planetUrl}?1=&page=${pageNumber}`)
-        if (response.status === 200) {
-            const data = await response.json()
-            return data.results
-        }
-        else {
-            throw Error(String(response.status))
-        }
+  try {
+    const response = await fetch(`${url}${planetUrl}?1=&page=${pageNumber}`);
+    if (response.status === 200) {
+      const data = await response.json();
+      return data.results;
+    } else {
+      throw Error(String(response.status));
     }
-    catch(error) {
-        console.log()
-    }  
-        return[]
-    }
+  } catch (error) {
+    console.log();
+    return [];
+  }
+}
 
-function displayPersonInfo(personID: number){
-
-    
-   if(fetchedPersons && fetchedPersons.length > 0)  {
+function displayPersonInfo(personID: number) {
+  if (fetchedPersons && fetchedPersons.length > 0) {
     personName!.innerHTML = fetchedPersons![personID].name;
     personHeight!.innerHTML = fetchedPersons![personID].height;
     personMass!.innerHTML = fetchedPersons![personID].mass;
@@ -119,28 +111,22 @@ function displayPersonInfo(personID: number){
     personEyeColor!.innerHTML = fetchedPersons![personID].eye_color;
     personBirthYear!.innerHTML = fetchedPersons![personID].birth_year;
     personGender!.innerHTML = fetchedPersons![personID].gender;
-   }
-      
-    else{
-        console.error("fel att lägga till personer");
-    }
+  } else {
+    console.error("fel att lägga till personer");
+  }
+}
 
-} 
-
-function displayPlanetInfo(){
-
-    if(fetchPlanets && fetchPlanets.length > 0){
-        planetName!.innerHTML = fetchedPlanets[clickedPlanet].name;
-        planetRotation!.innerHTML = fetchedPlanets[clickedPlanet].rotation_speed;
-        planetDiameter!.innerHTML = fetchedPlanets[clickedPlanet].diameter;
-        planetClimate!.innerHTML = fetchedPlanets[clickedPlanet].climate;
-        planetGravity!.innerHTML = fetchedPlanets[clickedPlanet].gravity;
-        planetTerrain!.innerHTML = fetchedPlanets[clickedPlanet].terrain;
-    }
-
-    else {
-        console.error("fel att lägga till planeter");
-    }
+function displayPlanetInfo(homeworldID: number) {
+  if (fetchedPlanets && fetchedPlanets.length > 0) {
+    planetName!.innerHTML = fetchedPlanets[homeworldID].name;
+    planetRotation!.innerHTML = fetchedPlanets[homeworldID].rotation_speed;
+    planetDiameter!.innerHTML = fetchedPlanets[homeworldID].diameter;
+    planetClimate!.innerHTML = fetchedPlanets[homeworldID].climate;
+    planetGravity!.innerHTML = fetchedPlanets[homeworldID].gravity;
+    planetTerrain!.innerHTML = fetchedPlanets[homeworldID].terrain;
+  } else {
+    console.error("fel att lägga till planeter");
+  }
 }
 
 async function fetchAllPepole(): Promise<void> {
@@ -155,162 +141,167 @@ async function fetchAllPepole(): Promise<void> {
   createListOfCharachter();
 }
 
-
 function populateInfo(clickedPerson: string): void {
-    let person: CharacterInfo[] | undefined;
-    person = fetchedPersons?.filter(person => person.name.toLowerCase().includes(clickedPerson))
-    
-    if (person && person.length > 0) {
-        const personUrl: string = person[0].url
-        const homeWorldUrl: string = person[0].homeworld
+  let person: CharacterInfo[] | undefined;
+  person = fetchedPersons?.filter((person) =>
+    person.name.toLowerCase().includes(clickedPerson)
+  );
 
-        const match = personUrl.match(/\/(\d+)\/$/);
+  if (person && person.length > 0) {
+    const personUrl: string = person[0].url;
+    const homeWorldUrl: string = person[0].homeworld;
 
-        if (match) {
-            const personIDstring = match[1];
-            const personID = parseInt(personIDstring)
-            displayPersonInfo(personID)
-          } else {
-            console.log("No match");
-          }
+    const match = personUrl.match(/\/(\d+)\/$/);
 
-        const match2 = homeWorldUrl.match(/\/(\d+)\/$/);
-
-        if (match2) {
-            const homeWorldString = match2[1];
-            const homeworldID = parseInt(homeWorldString)
-            displayPersonInfo(homeworldID)
-          } else {
-            console.log("No match");
-          }
+    if (match) {
+      const personIDstring = match[1];
+      const personID = parseInt(personIDstring);
+      displayPersonInfo(personID);
+    } else {
+      console.log("No match");
     }
 
-    async function fetchAllPlanets(): Promise<void> {
-        let pageNumber = 1;
-        let currentPagePlanets: PlanetInfo[] = [];
-      
-        do {
-          currentPagePlanets = await fetchPlanets(pageNumber);
-          fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
-          pageNumber++;
-        } while (pageNumber < 7);
+    const match2 = homeWorldUrl.match(/\/(\d+)\/$/);
+
+    if (match2) {
+      const homeWorldString = match2[1];
+      const homeworldID = parseInt(homeWorldString);
+      displayPersonInfo(homeworldID);
+    } else {
+      console.log("No match");
+    }
+  }
+}
+
+async function fetchAllPlanets(): Promise<void> {
+  let pageNumber = 1;
+  let currentPagePlanets: PlanetInfo[] = [];
+
+  do {
+    currentPagePlanets = await fetchPlanets(pageNumber);
+    fetchedPlanets = fetchedPlanets.concat(currentPagePlanets);
+    pageNumber++;
+  } while (pageNumber < 7);
+
+  /* PAGE FUNCTION */
+  const paginationNumbers = document.getElementById(
+    "pagination-numbers"
+  ) as HTMLElement;
+  const paginatedList = document.getElementById(
+    "characters-list"
+  ) as HTMLElement;
+  const listItems = paginatedList.querySelectorAll(
+    "li"
+  ) as NodeListOf<HTMLLIElement>;
+  const nextButton = document.getElementById(
+    "next-button"
+  ) as HTMLButtonElement;
+  const prevButton = document.getElementById(
+    "prev-button"
+  ) as HTMLButtonElement;
+
+  const paginationLimit = 10;
+  const pageCount = Math.ceil(listItems.length / paginationLimit);
+  let currentPage = 1;
+
+  const disableButton = (button: any) => {
+    button.classList.add("disabled");
+    button.setAttribute("disabled", true);
+  };
+
+  const enableButton = (button: any) => {
+    button.classList.remove("disabled");
+    button.removeAttribute("disabled");
+  };
+
+  const handlePageButtonsStatus = () => {
+    if (currentPage === 1) {
+      disableButton(prevButton);
+    } else {
+      enableButton(prevButton);
+    }
+
+    if (pageCount === currentPage) {
+      disableButton(nextButton);
+    } else {
+      enableButton(nextButton);
+    }
+  };
+
+  const handleActivePageNumber = () => {
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+      button.classList.remove("active");
+      const pageIndex = Number(button.getAttribute("page-index"));
+      if (pageIndex == currentPage) {
+        button.classList.add("active");
       }
-      
-      /* PAGE FUNCTION */
-      const paginationNumbers = document.getElementById(
-        "pagination-numbers"
-      ) as HTMLElement;
-      const paginatedList = document.getElementById("characters-list") as HTMLElement;
-      const listItems = paginatedList.querySelectorAll(
-        "li"
-      ) as NodeListOf<HTMLLIElement>;
-      const nextButton = document.getElementById("next-button") as HTMLButtonElement;
-      const prevButton = document.getElementById("prev-button") as HTMLButtonElement;
-      
-      const paginationLimit = 10;
-      const pageCount = Math.ceil(listItems.length / paginationLimit);
-      let currentPage = 1;
-      
-      const disableButton = (button: any) => {
-        button.classList.add("disabled");
-        button.setAttribute("disabled", true);
-      };
-      
-      const enableButton = (button: any) => {
-        button.classList.remove("disabled");
-        button.removeAttribute("disabled");
-      };
-      
-      const handlePageButtonsStatus = () => {
-        if (currentPage === 1) {
-          disableButton(prevButton);
-        } else {
-          enableButton(prevButton);
-        }
-      
-        if (pageCount === currentPage) {
-          disableButton(nextButton);
-        } else {
-          enableButton(nextButton);
-        }
-      };
-      
-      const handleActivePageNumber = () => {
-        document.querySelectorAll(".pagination-number").forEach((button) => {
-          button.classList.remove("active");
-          const pageIndex = Number(button.getAttribute("page-index"));
-          if (pageIndex == currentPage) {
-            button.classList.add("active");
-          }
-        });
-      };
-      
-      function createListOfCharachter(){
-      
-        fetchedPersons!.forEach(person => {
-            let liEl:HTMLElement = document.createElement("li");
-            liEl.innerHTML = person.name;
-            console.log(liEl);
-            //Gustavs functiuon i EventListner
-           /*  liEl.addEventListener("click", ); */
-           charachterList?.appendChild(liEl);
+    });
+  };
+
+  const appendPageNumber = (index: any) => {
+    const pageNumber = document.createElement("button");
+    pageNumber.className = "pagination-number";
+    pageNumber.innerHTML = index;
+    pageNumber.setAttribute("page-index", index);
+    pageNumber.setAttribute("aria-label", "Page " + index);
+
+    paginationNumbers.appendChild(pageNumber);
+  };
+
+  const getPaginationNumbers = () => {
+    for (let i = 1; i <= pageCount; i++) {
+      appendPageNumber(i);
+    }
+  };
+
+  const setCurrentPage = (pageNum: any) => {
+    currentPage = pageNum;
+
+    handleActivePageNumber();
+    handlePageButtonsStatus();
+
+    const prevRange = (pageNum - 1) * paginationLimit;
+    const currRange = pageNum * paginationLimit;
+
+    listItems.forEach((item, index) => {
+      item.classList.add("hidden");
+      if (index >= prevRange && index < currRange) {
+        item.classList.remove("hidden");
+      }
+    });
+  };
+
+  window.addEventListener("load", () => {
+    getPaginationNumbers();
+    setCurrentPage(1);
+
+    prevButton.addEventListener("click", () => {
+      setCurrentPage(currentPage - 1);
+    });
+
+    nextButton.addEventListener("click", () => {
+      setCurrentPage(currentPage + 1);
+    });
+
+    document.querySelectorAll(".pagination-number").forEach((button) => {
+      const pageIndex = Number(button.getAttribute("page-index"));
+
+      if (pageIndex) {
+        button.addEventListener("click", () => {
+          setCurrentPage(pageIndex);
         });
       }
-      
-      
-      
-      const appendPageNumber = (index: any) => {
-        const pageNumber = document.createElement("button");
-        pageNumber.className = "pagination-number";
-        pageNumber.innerHTML = index;
-        pageNumber.setAttribute("page-index", index);
-        pageNumber.setAttribute("aria-label", "Page " + index);
-      
-        paginationNumbers.appendChild(pageNumber);
-      };
-      
-      const getPaginationNumbers = () => {
-        for (let i = 1; i <= pageCount; i++) {
-          appendPageNumber(i);
-        }
-      };
-      
-      const setCurrentPage = (pageNum: any) => {
-        currentPage = pageNum;
-      
-        handleActivePageNumber();
-        handlePageButtonsStatus();
-      
-        const prevRange = (pageNum - 1) * paginationLimit;
-        const currRange = pageNum * paginationLimit;
-      
-        listItems.forEach((item, index) => {
-          item.classList.add("hidden");
-          if (index >= prevRange && index < currRange) {
-            item.classList.remove("hidden");
-          }
-        });
-      };
-      
-      window.addEventListener("load", () => {
-        getPaginationNumbers();
-        setCurrentPage(1);
-      
-        prevButton.addEventListener("click", () => {
-          setCurrentPage(currentPage - 1);
-        });
-      
-        nextButton.addEventListener("click", () => {
-          setCurrentPage(currentPage + 1);
-        });
-      
-        document.querySelectorAll(".pagination-number").forEach((button) => {
-          const pageIndex = Number(button.getAttribute("page-index"));
-      
-          if (pageIndex) {
-            button.addEventListener("click", () => {
-              setCurrentPage(pageIndex);
-            });
-          }
-        });
-      });
+    });
+  });
+}
+
+function createListOfCharachter() {
+  fetchedPersons!.forEach((person) => {
+    let liEl: HTMLElement = document.createElement("li");
+    liEl.innerHTML = person.name;
+    console.log(liEl);
+    //Gustavs functiuon i EventListner
+    /*  liEl.addEventListener("click", ); */
+    charachterList?.appendChild(liEl);
+  });
+}
